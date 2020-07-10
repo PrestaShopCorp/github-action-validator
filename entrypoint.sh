@@ -1,4 +1,5 @@
-#!/bin/sh -l
+#!/bin/sh
 
-ls
+pwd
+ls -la
 #php script.php $1 $2 $3
