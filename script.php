@@ -6,9 +6,6 @@ $client = new \GuzzleHttp\Client([
     "base_uri" => "https://validator.prestashop.com"
 ]);
 
-echo $argv[1];
-echo $argv[2];
-
 try {
     $response = $client->post('/api/modules', [
         'multipart' => [
