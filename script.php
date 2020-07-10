@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once '/usr/bin/composer/vendor/autoload.php';
 
 
 $client = new \GuzzleHttp\Client([
