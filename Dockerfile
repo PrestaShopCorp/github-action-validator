@@ -12,6 +12,7 @@ COPY --from=composer:1.8.6 /usr/bin/composer /usr/bin/composer
 RUN composer global require hirak/prestissimo && composer global require guzzlehttp/guzzle
 
 COPY entrypoint.sh /entrypoint.sh
+COPY script.php /script.php
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
