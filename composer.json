@@ -1,0 +1,13 @@
+{
+    "name": "mpoulain/github-action-validator",
+    "authors": [
+        {
+            "name": "Poulinho",
+            "email": "poulai_a@etna-alternance.net"
+        }
+    ],
+    "require": {
+        "hirak/prestissimo": "^0.3.10",
+        "guzzlehttp/guzzle": "^7.0"
+    }
+}

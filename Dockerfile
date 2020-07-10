@@ -7,7 +7,9 @@ RUN apt-get update && apt-get install -y \
 
 
 COPY --from=composer:1.8.6 /usr/bin/composer /usr/bin/composer
-RUN composer global require hirak/prestissimo && composer global require guzzlehttp/guzzle
+COPY composer.json /usr/bin/composer.json
+
+RUN composer install -d /usr/bin
 
 COPY script.php /usr/bin/script.php
 COPY entrypoint.sh /entrypoint.sh

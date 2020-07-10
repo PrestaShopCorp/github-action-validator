@@ -1,7 +1,6 @@
 <?php
 
-require_once '~/.composer/vendor/autoload.php';
-
+require_once __DIR__ . '/vendor/autoload.php';
 
 $client = new \GuzzleHttp\Client([
     "base_uri" => "https://validator.prestashop.com"
@@ -24,7 +23,7 @@ $response = $client->post('/api/modules', [
     ]
 ]);
  
-$body = $response->getContents()->getBody();
+$body = $response->getBody()->getContents();
 $arr_body = json_decode($body);
 print_r($arr_body);
   
