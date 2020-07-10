@@ -11,11 +11,11 @@ inputs:
   github_branch:
     description: 'Add the github branch'
     required: true
-env:
-
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  env: 
+    - "API_KEY"
   args:
     - ${{ inputs.github_link }}
     - ${{ inputs.github_branch }}

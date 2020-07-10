@@ -5,7 +5,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $client = new \GuzzleHttp\Client([
     "base_uri" => "https://validator.prestashop.com"
 ]);
-
+echo "je passe ici";
 echo getenv('API_KEY');
 
 $response = $client->post('/api/modules', [
