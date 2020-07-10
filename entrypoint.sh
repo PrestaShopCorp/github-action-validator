@@ -1,3 +1,4 @@
 #!/bin/sh
 
-php /usr/bin/script.php $1 $2 $3
+ls -la ~/.composer/vendor
+#php /usr/bin/script.php $1 $2 $3
