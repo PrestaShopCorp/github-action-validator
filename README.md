@@ -9,5 +9,5 @@ You need to replace the inputs commands:
             VALIDATOR_API_KEY: VALIDATOR_API_KEY
         with:
             github_link: orga/repoName
-            ithub_branch: currentBranch
+            github_branch: currentBranch
 ```

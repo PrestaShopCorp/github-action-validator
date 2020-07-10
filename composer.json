@@ -2,12 +2,11 @@
     "name": "PrestaShopCorp/github-action-validator",
     "authors": [
         {
-            "name": "Poulinho",
-            "email": "maxime.poulain@prestashop.com"
+            "name": "Prestashop"
         }
     ],
     "require": {
-        "hirak/prestissimo": "^0.3.10",
-        "guzzlehttp/guzzle": "^7.0"
+        "guzzlehttp/guzzle": "^7.0",
+        "symfony/console": "^5.1"
     }
 }
