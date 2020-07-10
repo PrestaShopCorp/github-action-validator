@@ -13,6 +13,7 @@ RUN composer install -d /usr/bin
 
 COPY script.php /usr/bin/script.php
 COPY entrypoint.sh /entrypoint.sh
+ENV API_KEY
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
