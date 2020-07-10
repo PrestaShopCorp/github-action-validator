@@ -1,5 +1,7 @@
 #!/bin/sh
 
 pwd
-ls -la
+ls -laR
+cd ..
+ls -laR
 #php script.php $1 $2 $3
