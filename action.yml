@@ -1,4 +1,4 @@
-name: qwerty
+name: Validator action
 author: PrestaShopCorp
 description: 'Send your zip on PrestaShop Validator'
 branding:
@@ -11,14 +11,12 @@ inputs:
   github_branch:
     description: 'Add the github branch'
     required: true
-  api_key:
-    description: 'Add the github branch'
+  validator_api_key:
+    description: 'api key validator'
     required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  env: 
-    API_KEY: ${{ inputs.api_key }}
   args:
     - ${{ inputs.github_link }}
     - ${{ inputs.github_branch }}

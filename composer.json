@@ -1,9 +1,9 @@
 {
-    "name": "mpoulain/github-action-validator",
+    "name": "PrestaShopCorp/github-action-validator",
     "authors": [
         {
             "name": "Poulinho",
-            "email": "poulai_a@etna-alternance.net"
+            "email": "maxime.poulain@prestashop.com"
         }
     ],
     "require": {
