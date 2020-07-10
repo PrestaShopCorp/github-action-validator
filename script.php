@@ -18,7 +18,7 @@ $response = $client->post('/api/modules', [
         ],
         [
             'name'     => 'key',
-            'contents' => $argv[3]
+            'contents' => getenv('API_KEY')
         ]
     ]
 ]);

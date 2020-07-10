@@ -1,3 +1,3 @@
 #!/bin/sh
 
-php /usr/bin/script.php $1 $2 $3
+php /usr/bin/script.php $1 $2

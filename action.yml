@@ -11,9 +11,6 @@ inputs:
   github_branch:
     description: 'Add the github branch'
     required: true
-  api_key:
-    description: 'Add the github branch'
-    required: true
 env:
 
 runs:
@@ -22,4 +19,3 @@ runs:
   args:
     - ${{ inputs.github_link }}
     - ${{ inputs.github_branch }}
-    - ${{ inputs.api_key }}
