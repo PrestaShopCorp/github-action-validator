@@ -20,4 +20,4 @@ runs:
   args:
     - ${{ inputs.github_link }}
     - ${{ inputs.github_branch }}
-    - ${{ secrets.VALIDATOR_API_KEY }}
+    - ${{ inputs.VALIDATOR_API_KEY }}
