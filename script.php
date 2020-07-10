@@ -6,6 +6,8 @@ $client = new \GuzzleHttp\Client([
     "base_uri" => "https://validator.prestashop.com"
 ]);
 
+echo getenv('API_KEY');
+
 $response = $client->post('/api/modules', [
     'multipart' => [
         [
