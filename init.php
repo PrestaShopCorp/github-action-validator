@@ -65,8 +65,6 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
 
                 case 'Security':
                     $count = 0;
-                    // $io->write('| File | Error |'.PHP_EOL);
-                    
                     $table = new Table($buffer);
                     $table->setHeaders(['File', 'Error']);
 
@@ -79,7 +77,6 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                                             foreach ($errorDataStructure as $filesErrors) {
                                                 $filesErrors['message'] = str_replace('|', '\|', $filesErrors['message']);
                                                 $filesErrors['message'] = str_replace(["\\r\\n", "\r\n", "\\r", "\r", "\\n", "\n"], ' ', $filesErrors['message']);
-                                                // $io->write('| '.$filesErrors['file'].':'.$filesErrors['line'].' | '.$filesErrors['message'].' |'.PHP_EOL);
                                                 $table->addRows([
                                                     [trim($filesErrors['file'].':'.$filesErrors['line']), trim($filesErrors['message'])],
                                                 ]);
@@ -96,9 +93,8 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                     if ($count >= 1) {
                         $io->writeln('<details>');
                         $io->writeln("<summary>$category</summary>");
-                        $io->writeln("<pre>"); // might be needed for spoiler to work, need testing
+                        $io->writeln("<pre>");
                         $table->setStyle('box');
-                        $table->setColumnMaxWidth(1, 20);
                         $table->render();
                         $io->writeln('</details>');
                     }
@@ -115,9 +111,8 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                     if ($count >= 1) {
                         $io->writeln('<details>');
                         $io->writeln("<summary>$category</summary>");
-                        $io->writeln("<pre>"); // might be needed for spoiler to work, need testing
+                        $io->writeln("<pre>");
                         $table->setStyle('box');
-                        $table->setColumnMaxWidth(1, 20);
                         $table->render();
                         $io->writeln('</details>');
                     }
@@ -154,9 +149,8 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                     if ($count >= 1) {
                         $io->writeln('<details>');
                         $io->writeln("<summary>$category</summary>");
-                        $io->writeln("<pre>"); // might be needed for spoiler to work, need testing
+                        $io->writeln("<pre>");
                         $table->setStyle('box');
-                        $table->setColumnMaxWidth(1, 20);
                         $table->render();
                         $io->writeln('</details>');
                     }
