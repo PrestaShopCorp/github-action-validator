@@ -93,7 +93,7 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                         $io->writeln("<summary>$category</summary>");
                         $io->writeln("<pre>");
                         $table->setStyle('box');
-                        // $table->setMaxWidth() to change width
+                        // $table->setColumnMaxWidth() to change width
                         $table->render();
                         $io->writeln('</details>');
                     }
@@ -158,7 +158,7 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
         }
 
         // TODO: use symfony/filesystem
-        file_put_contents("result_validator.txt", $buffer->fetch());
+        file_put_contents('result_validator.txt', $buffer->fetch());
 
         if (true === $isValid) {
             return Command::SUCCESS;
