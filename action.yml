@@ -1,0 +1,22 @@
+name: Validator action
+author: PrestaShopCorp
+description: 'Send your zip on PrestaShop Validator'
+branding:
+  icon: 'check'
+  color: 'blue'
+inputs:
+  github_link:
+    description: 'link of your repository (Orga/Repo)'
+    required: true
+  github_branch:
+    description: 'Add the github branch'
+    required: true
+  validator_api_key:
+    description: 'api key validator'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.github_link }}
+    - ${{ inputs.github_branch }}
