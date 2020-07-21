@@ -81,7 +81,7 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                                                 $filesErrors['message'] = str_replace(["\\r\\n", "\r\n", "\\r", "\r", "\\n", "\n"], ' ', $filesErrors['message']);
                                                 // $io->write('| '.$filesErrors['file'].':'.$filesErrors['line'].' | '.$filesErrors['message'].' |'.PHP_EOL);
                                                 $table->addRows([
-                                                    [$filesErrors['file'].':'.$filesErrors['line'], $filesErrors['message']],
+                                                    [trim($filesErrors['file'].':'.$filesErrors['line']), trim($filesErrors['message'])],
                                                 ]);
                                                 $count++;
                                             }
@@ -96,7 +96,9 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                     if ($count >= 1) {
                         $io->writeln('<details>');
                         $io->writeln("<summary>$category</summary>");
+                        $io->writeln("<pre>"); // might be needed for spoiler to work, need testing
                         $table->setStyle('box');
+                        $table->setColumnMaxWidth(1, 20);
                         $table->render();
                         $io->writeln('</details>');
                     }
@@ -113,7 +115,7 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                     if ($count >= 1) {
                         $io->writeln('<details>');
                         $io->writeln("<summary>$category</summary>");
-                        // $io->writeln("<pre>"); // might be needed for spoiler to work, need testing
+                        $io->writeln("<pre>"); // might be needed for spoiler to work, need testing
                         $table->setStyle('box');
                         $table->setColumnMaxWidth(1, 20);
                         $table->render();
