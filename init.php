@@ -75,10 +75,8 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                                     foreach ($error as $errorDataStructure) {
                                         if (is_array($errorDataStructure)) {
                                             foreach ($errorDataStructure as $filesErrors) {
-                                                $filesErrors['message'] = str_replace('|', '\|', $filesErrors['message']);
-                                                $filesErrors['message'] = str_replace(["\\r\\n", "\r\n", "\\r", "\r", "\\n", "\n"], ' ', $filesErrors['message']);
                                                 $table->addRows([
-                                                    [trim($filesErrors['file'].':'.$filesErrors['line']), trim($filesErrors['message'])],
+                                                    [$filesErrors['file'].':'.$filesErrors['line'], $filesErrors['message']],
                                                 ]);
                                                 $count++;
                                             }
