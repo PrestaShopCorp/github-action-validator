@@ -93,6 +93,7 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                         $io->writeln("<summary>$category</summary>");
                         $io->writeln("<pre>");
                         $table->setStyle('box');
+                        // $table->setMaxWidth() to change width
                         $table->render();
                         $io->writeln('</details>');
                     }
