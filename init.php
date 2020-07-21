@@ -65,8 +65,7 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
 
                 case 'Security':
                     $count = 0;
-                    $io->writeln('| File | Error |');
-                    $io->writeln('| --- | --- |');
+                    // $io->write('| File | Error |'.PHP_EOL);
                     
                     $table = new Table($buffer);
                     $table->setHeaders(['File', 'Error']);
@@ -80,18 +79,17 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                                             foreach ($errorDataStructure as $filesErrors) {
                                                 $filesErrors['message'] = str_replace('|', '\|', $filesErrors['message']);
                                                 $filesErrors['message'] = str_replace(["\\r\\n", "\r\n", "\\r", "\r", "\\n", "\n"], ' ', $filesErrors['message']);
-                                                $io->writeln('| '.$filesErrors['file'].':'.$filesErrors['line'].' | '.$filesErrors['message'].' |');
-                                                // $table->addRow([
-                                                //     $filesErrors['file'].':'.$filesErrors['line'],
-                                                //     $filesErrors['message'],
-                                                // ]);
+                                                // $io->write('| '.$filesErrors['file'].':'.$filesErrors['line'].' | '.$filesErrors['message'].' |'.PHP_EOL);
+                                                $table->addRows([
+                                                    [$filesErrors['file'].':'.$filesErrors['line'], $filesErrors['message']],
+                                                ]);
+                                                $count++;
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                        $count++;
                     }
                     
                     
@@ -99,9 +97,7 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                         $io->writeln('<details>');
                         $io->writeln("<summary>$category</summary>");
                         $table->setStyle('box');
-                        // $table->setColumnMaxWidth(0, 20);
-                        // $table->setColumnMaxWidth(1, 20);
-                        // $table->render();
+                        $table->render();
                         $io->writeln('</details>');
                     }
                 break;
