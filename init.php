@@ -2,22 +2,24 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\SingleCommandApplication;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-CONST VALIDATOR_URL = 'https://validator.prestashop.com';
+const VALIDATOR_URL = 'https://validator.prestashop.com';
 
 (new SingleCommandApplication())
     ->setName('ValidatorDecider') // Optional
     ->setVersion('1.0.0') // Optional
-    ->addArgument('github_link', InputArgument::OPTIONAL, 'The github_link')
-    ->addArgument('github_branch', InputArgument::OPTIONAL, 'The github_branch')
+    ->addOption('github_link', null, InputOption::VALUE_OPTIONAL, 'The github_link')
+    ->addOption('github_branch', null, InputOption::VALUE_OPTIONAL, 'The github_branch')
+    ->addOption('archive', null, InputOption::VALUE_OPTIONAL, 'The archive')
+    ->addOption('api-key', null, InputOption::VALUE_OPTIONAL, 'The api key')
     ->setCode(function (InputInterface $input, OutputInterface $output) {
 
         $buffer = new BufferedOutput($output->getVerbosity());
@@ -25,26 +27,51 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
         $client = new \GuzzleHttp\Client([
             'base_uri' => VALIDATOR_URL
         ]);
-        
+
+        if (getenv('VALIDATOR_API_KEY')) {
+            $apiKey = getenv('VALIDATOR_API_KEY');
+        } else {
+            $apiKey = $input->getOption('api-key');
+        }
+
+        if (empty($apiKey)) {
+            throw new Exception('No API Key is set to authenticate the request to the validator. Please set the env var VALIDATOR_API_KEY or the option --api-key=[...]');
+        }
+
         // Call validator
         try {
-            $response = $client->post('/api/modules', [
-                'multipart' => [
-                    [
-                        'name'     => 'github_link',
-                        'contents' => $input->getArgument('github_link'),
-                    ],
-                    [
-                        'name'     => 'github_branch',
-                        'contents' => $input->getArgument('github_branch'),
-                    ],
-                    [
-                        'name'     => 'key',
-                        'contents' => getenv('VALIDATOR_API_KEY')
-                    ]
+            $multipart = [
+                [
+                    'name'     => 'key',
+                    'contents' => $apiKey
                 ]
+            ];
+            if ($input->hasOption('archive')) {
+                $archive = $input->getOption('archive');
+
+                if (empty($archive) || !file_exists($archive) || !is_readable($archive)) {
+                    throw new Exception(sprintf('File %s was not found, or cannot be read', $archive));
+                }
+
+                $multipart[] = [
+                    'name'     => 'archive',
+                    'contents' => fopen($archive, 'r'),
+                ];
+            } else {
+                $multipart[] = [
+                    'name'     => 'github_link',
+                    'contents' => $input->getOption('github_link'),
+                ];
+                $multipart[] = [
+                    'name'     => 'github_branch',
+                    'contents' => $input->getOption('github_branch'),
+                ];
+            }
+
+            $response = $client->post('/api/modules', [
+                'multipart' => $multipart
             ]);
-             
+
             $stdResponse = json_decode($response->getBody()->getContents(), true);
         } catch (\Throwable $th) {
             $io->writeln($th->getMessage());
@@ -52,16 +79,16 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
             // maybe we should return success and accept that validator can be down ?
             return Command::FAILURE;
         }
-        
+
         // Format response
         $io->title('Validator Results');
         $isValid = true;
-        
+
         foreach ($stdResponse as $category => $reports) {
             switch ($category) {
                 case 'Details':
                     // do nothing
-                break;
+                    break;
 
                 case 'Security':
                     $count = 0;
@@ -76,7 +103,7 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                                         if (is_array($errorDataStructure)) {
                                             foreach ($errorDataStructure as $filesErrors) {
                                                 $table->addRows([
-                                                    [$filesErrors['file'].':'.$filesErrors['line'], $filesErrors['message']],
+                                                    [$filesErrors['file'] . ':' . $filesErrors['line'], $filesErrors['message']],
                                                 ]);
                                                 $count++;
                                             }
@@ -86,8 +113,8 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                             }
                         }
                     }
-                    
-                    
+
+
                     if ($count >= 1) {
                         $io->writeln('<details>');
                         $io->writeln("<summary>$category</summary>");
@@ -97,7 +124,7 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                         $table->render();
                         $io->writeln('</details>');
                     }
-                break;
+                    break;
 
                 case 'Structure':
                     $count = 0;
@@ -106,7 +133,7 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                         $table->addRow([$key]);
                         $count++;
                     }
-                    
+
                     if ($count >= 1) {
                         $io->writeln('<details>');
                         $io->writeln("<summary>$category</summary>");
@@ -115,8 +142,8 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                         $table->render();
                         $io->writeln('</details>');
                     }
-                break;
-              
+                    break;
+
                 default:
                     $count = 0;
                     $table = new Table($buffer);
@@ -128,12 +155,12 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                                     foreach ($rule as $errors) {
                                         foreach ($errors['content'] as $error) {
                                             $table->addRows([
-                                                [$error['file'].':'.$error['line'], $error['message']],
+                                                [$error['file'] . ':' . $error['line'], $error['message']],
                                             ]);
                                             $count++;
-        
-                                            if (false !== strpos($error['message'], 'should be removed') 
-                                                || false !== strpos($error['message'], 'index.php file not found') 
+
+                                            if (false !== strpos($error['message'], 'should be removed')
+                                                || false !== strpos($error['message'], 'index.php file not found')
                                             ) {
                                                 $isValid = false;
                                             }
@@ -143,8 +170,8 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                             }
                         }
                     }
-                    
-                    
+
+
                     if ($count >= 1) {
                         $io->writeln('<details>');
                         $io->writeln("<summary>$category</summary>");
@@ -153,7 +180,7 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
                         $table->render();
                         $io->writeln('</details>');
                     }
-                break;
+                    break;
             }
         }
 
@@ -165,6 +192,6 @@ CONST VALIDATOR_URL = 'https://validator.prestashop.com';
         } else {
             return Command::FAILURE;
         }
-        
+
     })
     ->run();
