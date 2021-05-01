@@ -4,8 +4,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\SingleCommandApplication;
@@ -16,10 +16,9 @@ const VALIDATOR_URL = 'https://validator.prestashop.com';
 (new SingleCommandApplication())
     ->setName('ValidatorDecider') // Optional
     ->setVersion('1.0.0') // Optional
-    ->addOption('github_link', null, InputOption::VALUE_OPTIONAL, 'The github_link')
-    ->addOption('github_branch', null, InputOption::VALUE_OPTIONAL, 'The github_branch')
-    ->addOption('archive', null, InputOption::VALUE_OPTIONAL, 'The archive')
-    ->addOption('api-key', null, InputOption::VALUE_OPTIONAL, 'The api key')
+    ->addArgument('github_link', InputArgument::OPTIONAL, 'The github_link')
+    ->addArgument('github_branch', InputArgument::OPTIONAL, 'The github_branch')
+    ->addArgument('archive', InputArgument::OPTIONAL, 'The archive')
     ->setCode(function (InputInterface $input, OutputInterface $output) {
 
         $buffer = new BufferedOutput($output->getVerbosity());
@@ -28,14 +27,14 @@ const VALIDATOR_URL = 'https://validator.prestashop.com';
             'base_uri' => VALIDATOR_URL
         ]);
 
+        $apiKey = null;
+
         if (getenv('VALIDATOR_API_KEY')) {
             $apiKey = getenv('VALIDATOR_API_KEY');
-        } else {
-            $apiKey = $input->getOption('api-key');
         }
 
         if (empty($apiKey)) {
-            throw new Exception('No API Key is set to authenticate the request to the validator. Please set the env var VALIDATOR_API_KEY or the option --api-key=[...]');
+            throw new Exception('No API Key is set to authenticate the request to the validator. Please set the env var VALIDATOR_API_KEY');
         }
 
         // Call validator
@@ -46,8 +45,8 @@ const VALIDATOR_URL = 'https://validator.prestashop.com';
                     'contents' => $apiKey
                 ]
             ];
-            if ($input->hasOption('archive')) {
-                $archive = $input->getOption('archive');
+            if ($input->hasArgument('archive')) {
+                $archive = $input->getArgument('archive');
 
                 if (empty($archive) || !file_exists($archive) || !is_readable($archive)) {
                     throw new Exception(sprintf('File %s was not found, or cannot be read', $archive));
@@ -60,11 +59,11 @@ const VALIDATOR_URL = 'https://validator.prestashop.com';
             } else {
                 $multipart[] = [
                     'name'     => 'github_link',
-                    'contents' => $input->getOption('github_link'),
+                    'contents' => $input->getArgument('github_link'),
                 ];
                 $multipart[] = [
                     'name'     => 'github_branch',
-                    'contents' => $input->getOption('github_branch'),
+                    'contents' => $input->getArgument('github_branch'),
                 ];
             }
 
