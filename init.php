@@ -33,14 +33,15 @@ const VALIDATOR_URL = 'https://validator.prestashop.com';
             throw new Exception('No API Key is set to authenticate the request to the validator. Please set the env var VALIDATOR_API_KEY');
         }
 
+        $multipart = [
+            [
+                'name'     => 'key',
+                'contents' => $apiKey
+            ]
+        ];
+
         // Call validator
         try {
-            $multipart = [
-                [
-                    'name'     => 'key',
-                    'contents' => $apiKey
-                ]
-            ];
             if ($input->hasArgument('archive')) {
                 $archive = $input->getArgument('archive');
 
