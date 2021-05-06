@@ -10,4 +10,6 @@ You need to replace the inputs commands:
         with:
             github_link: orga/repoName
             github_branch: currentBranch
+            or
+            archive: path/to/file
 ```
