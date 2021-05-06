@@ -27,11 +27,7 @@ const VALIDATOR_URL = 'https://validator.prestashop.com';
             'base_uri' => VALIDATOR_URL
         ]);
 
-        $apiKey = null;
-
-        if (getenv('VALIDATOR_API_KEY')) {
-            $apiKey = getenv('VALIDATOR_API_KEY');
-        }
+        $apiKey = getenv('VALIDATOR_API_KEY');
 
         if (empty($apiKey)) {
             throw new Exception('No API Key is set to authenticate the request to the validator. Please set the env var VALIDATOR_API_KEY');
